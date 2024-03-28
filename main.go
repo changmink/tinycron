@@ -71,6 +71,10 @@ func (job *TinyCronJob) nap() {
 	if job.opts.verbose {
 		output(fmt.Sprintf("next job scheduled for %s", nextRun))
 	}
+	// In cases where DST is applied, timeDelta can become zero or negative.
+	if timeDelta <= 0 {
+		timeDelta = nextRun.Add(time.Hour).Sub(now)
+	}
 	time.Sleep(timeDelta)
 }
 
